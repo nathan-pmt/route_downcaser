@@ -21,22 +21,22 @@ module RouteDowncaser
       end
 
       # Downcase request_uri and/or path_info if applicable
-      if env['REQUEST_URI'].present?
+      if !env['REQUEST_URI'].nil? || !env['REQUEST_URI'].empty?
         env['REQUEST_URI'] = downcased_uri(env['REQUEST_URI'])
       end
 
-      if env['PATH_INFO'].present?
+      if !env['PATH_INFO'].nil? || !env['PATH_INFO'].empty?
         env['PATH_INFO'] = downcased_uri(env['PATH_INFO'])
       end
 
       # If redirect configured, then return redirect request,
       # if either request_uri or path_info has changed
       if RouteDowncaser.redirect && env['REQUEST_METHOD'] == "GET"
-        if env["REQUEST_URI"].present? and old_env["REQUEST_URI"] != env["REQUEST_URI"]
+        if (!env["REQUEST_URI"].nil? || !env["REQUEST_URI"].empty?) and old_env["REQUEST_URI"] != env["REQUEST_URI"]
           return redirect_header(env["REQUEST_URI"])
         end
 
-        if env["PATH_INFO"].present? and old_env["PATH_INFO"] != env["PATH_INFO"]
+        if (!env["PATH_INFO"].nil? || !env["PATH_INFO"].empty?) and old_env["PATH_INFO"] != env["PATH_INFO"]
           return redirect_header(env["PATH_INFO"])
         end
       end
